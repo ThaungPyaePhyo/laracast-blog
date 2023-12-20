@@ -15,14 +15,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $posts = Post::allFiles();
     return view('posts',[
-        'posts' => $posts
+        'posts' => Post::all()
     ]);
 });
 
 Route::get('posts/{post}', function ($slug) {
     return view('post',[
-        'post' => Post::find($slug)
+        'post' => Post::findOrFail($slug)
     ]);
 });
