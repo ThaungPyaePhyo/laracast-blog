@@ -17,9 +17,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('posts',[
-        'posts' => Post::with('category')->get()
+        'posts' => Post::latest()->get(),
+        'categories' => Category::all()
     ]);
-});
+})->name('home');
 
 Route::get('posts/{post}', function (Post $post) {
     return view('post',[
@@ -29,6 +30,15 @@ Route::get('posts/{post}', function (Post $post) {
 
 Route::get('categories/{category}', function (Category $category) {
     return view('posts',[
-        'posts' => $category->posts
+        'posts' => $category->posts,
+        'currentCategory' => $category,
+        'categories' => Category::all()
+    ]);
+});
+
+Route::get('author/{author}', function (\App\Models\User $author) {
+    return view('posts',[
+        'posts' => $author->posts,
+        'categories' => Category::all()
     ]);
 });
