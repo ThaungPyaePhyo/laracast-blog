@@ -21,15 +21,14 @@
                             {{ $post->title }}
                         </a>
                     </h1>
-
                     <span class="mt-2 block text-gray-400 text-xs">
                                         Published <time>{{ $post->created_at->diffForHumans() }}</time>
                                     </span>
                 </div>
             </header>
 
-            <div class="text-sm mt-2">
-               {{ $post->excerpt }}
+            <div class="text-sm mt-2 space-y-4">
+               {!! $post->excerpt !!}
             </div>
 
             <footer class="flex justify-between items-center mt-8">
