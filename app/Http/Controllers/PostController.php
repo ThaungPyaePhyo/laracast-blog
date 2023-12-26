@@ -38,8 +38,4 @@ class PostController extends Controller
         //
     }
 
-    protected function getPosts()
-    {
-        return Post::latest()->filter(request(['search']))->get();
-    }
 }

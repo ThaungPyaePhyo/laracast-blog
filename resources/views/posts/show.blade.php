@@ -49,12 +49,13 @@
                 </div>
             </div>
             <section class="col-span-8 col-start-5 mt-10 space-y-6">
+                @auth()
                 <x-panel>
-                <form method="POST" action="#">
+                <form method="POST" action="/posts/{{ $post->id }}/comments">
                     @csrf
 
                     <header class="flex items-center">
-                        <img src="https://i.pravatar.cc/60?u={{ auth()->id() }}" alt="" width="60" height="60" class="rounded-full">
+                        <img src="https://i.pravatar.cc/60?user={{ auth()->id() }}" alt="" width="60" height="60" class="rounded-full">
                         <h2>
                             Want to paraticipate?
                         </h2>
@@ -67,6 +68,11 @@
                     </div>
                 </form>
                 </x-panel>
+                @else
+                    <p class="font-semibold">
+                        <a href="/register" class="hover:underline">Register</a> or <a href="/login" class="hover:underline">Log in </a> to leave a comment
+                    </p>
+                @endauth
                 @foreach($post->comments as $comment)
                     <x-post-comment :comment="$comment"/>
                 @endforeach

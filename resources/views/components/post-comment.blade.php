@@ -8,7 +8,7 @@
         <header>
             <h3 class="font-bold">{{ $comment->author->username }}</h3>
             <p class="text-xs">
-                <time>{{ $comment->created_at }}</time>
+                <time>{{ $comment->created_at->format(" F j, Y, g:i a ") }}</time>
             </p>
         </header>
         <p>
