@@ -7,10 +7,10 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionController;
 use App\Models\Category;
 use App\Models\Post;
-use App\Services\Newsletter;
+use App\Services\MailchimpNewsletter;
 use Illuminate\Support\Facades\Route;
 
-Route::post('newsletter', function (Newsletter $newsletter) {
+Route::post('newsletter', function (MailchimpNewsletter $newsletter) {
 
 });
 Route::post('newsletter',NewsletterController::class);

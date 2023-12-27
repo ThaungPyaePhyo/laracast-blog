@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Services\Newsletter;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class NewsletterController extends Controller
 {
@@ -13,8 +15,8 @@ class NewsletterController extends Controller
 
         try {
             $newsletter->subscribe(request('email'));
-        } catch (\Exception $e) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
+        } catch (Exception $e) {
+            throw ValidationException::withMessages([
                 'email' => 'This email could not be added to our newsletter list'
             ]);
         }
