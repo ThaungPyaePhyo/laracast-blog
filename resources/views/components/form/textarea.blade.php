@@ -4,7 +4,7 @@
         {{ ucwords($name) }}
     </label>
     <textarea class="border border-gray-400 p-2 w-full rounded" name="{{ $name }}" id="{{$name}}">
-                    {{ old($name) }}
+                    {{ $slot ?? old($name) }}
                 </textarea>
     <x-form.error name="{{ $name }}"/>
 </div>
