@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
 class AdminPostController extends Controller
 {
     public function index()
     {
+        $this->authorize('admin');
         return view('admin.posts.index',[
             'posts' => Post::paginate(50)
         ]);
@@ -22,18 +23,12 @@ class AdminPostController extends Controller
 
     public function store()
     {
-        $attr = request()->validate([
-            'title' => 'required',
-            'thumbnail' => 'required|image',
-            'excerpt' => 'required',
-            'body' => 'required',
-            'category_id' => ['required',Rule::exists('categories','id')]
-        ]);
-
-        $attr['user_id'] = auth()->id();
-        $attr['thumbnail'] = request()->file('thumbnail')->store('thumbnails');
+        $attr = $this->validatePost();
         try {
-            Post::create($attr);
+            Post::create(array_merge($this->validatePost(),[
+                'user_id' => auth()->id(),
+                'thumbnail' => request()->file('thumbnail')->store('thumbnails')
+            ]));
         } catch (\Exception $e) {
             dd($e);
         }
@@ -50,15 +45,8 @@ class AdminPostController extends Controller
 
     public function update(Post $post)
     {
-        $attr = request()->validate([
-            'title' => 'required',
-            'thumbnail' => 'image',
-            'excerpt' => 'required',
-            'body' => 'required',
-            'category_id' => ['required',Rule::exists('categories','id')]
-        ]);
-
-        if (isset($attr['thumbnail'])) {
+        $attr = $this->validatePost($post);
+        if ($attr['thumbnail'] ?? false) {
             $attr['thumbnail'] = request()->file('thumbnail')->store('thumbnails');
         }
        $post->update($attr);
@@ -70,5 +58,18 @@ class AdminPostController extends Controller
     {
         $post->delete();
         return back()->with('success','Post Deleted!');
+    }
+
+    protected function validatePost(?Post $post = null)
+    {
+        $post ??= new Post();
+        $attr = request()->validate([
+            'title' => 'required',
+            'thumbnail' => $post->exists ? ['image'] : ['required|image'],
+            'excerpt' => 'required',
+            'body' => 'required',
+            'category_id' => ['required',Rule::exists('categories','id')]
+        ]);
+        return $attr;
     }
 }
